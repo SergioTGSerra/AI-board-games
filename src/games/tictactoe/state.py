@@ -81,6 +81,9 @@ class TicTacToeState(State):
         return 2
 
     def validate_action(self, action: TicTacToeAction) -> bool:
+        if action is None:
+            return False
+
         col = action.get_col()
         row = action.get_row()
 
