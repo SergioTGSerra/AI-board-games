@@ -1,3 +1,4 @@
+from games.connect4.players.human import HumanConnect4Player
 from games.tictactoe.players.greedy import GreedyTicTacToePlayer
 from games.tictactoe.players.human import HumanTicTacToePlayer
 from games.tictactoe.players.minimax import MinimaxTicTacToePlayer
@@ -34,13 +35,13 @@ def main():
 
     num_iterations = 1000
 
-    # c4_simulations = [
+    c4_simulations = [
     #     # uncomment to play as human
-    #     #{
-    #     #    "name": "Connect4 - Human VS Random",
-    #     #    "player1": HumanConnect4Player("Human"),
-    #     #    "player2": RandomConnect4Player("Random")
-    #     #},
+    #     {
+    #             "name": "Connect4 - Human VS Random",
+    #             "player1": HumanConnect4Player("Human"),
+    #             "player2": RandomConnect4Player("Random")
+    #     }
     #     {
     #         "name": "Connect4 - Random VS Random",
     #         "player1": RandomConnect4Player("Random 1"),
@@ -115,30 +116,30 @@ def main():
     #         "player1": CFRKuhnPokerPlayer("CFR"),
     #         "player2": AlwaysBetKingKuhnPokerPlayer("AlwaysBetKing")
     #     }
-    # ]
+     ]
 
     tictactoe_simulations = [
         # uncomment to play as human
+        # {
+        #    "name": "TicTacToe - Human VS Random",
+        #    "player1": RandomTicTacToePlayer("Random1"),
+        #    "player2": RandomTicTacToePlayer("Random2")
+        # },
         {
-           "name": "TicTacToe - Human VS Random",
-           "player1": HumanTicTacToePlayer("Human"),
-           "player2": RandomTicTacToePlayer("Random")
+            "name": "TicTacToe - Random VS Random",
+            "player1": RandomTicTacToePlayer("Random 1"),
+            "player2": RandomTicTacToePlayer("Random 2")
         },
-        # {
-        #     "name": "TicTacToe - Random VS Random",
-        #     "player1": RandomTicTacToePlayer("Random 1"),
-        #     "player2": RandomTicTacToePlayer("Random 2")
-        # },
-        # {
-        #     "name": "TicTacToe - Greedy VS Random",
-        #     "player1": GreedyTicTacToePlayer("Greedy"),
-        #     "player2": RandomTicTacToePlayer("Random")
-        # },
-        # {
-        #     "name": "Minimax VS Random",
-        #     "player1": MinimaxTicTacToePlayer("Minimax"),
-        #     "player2": RandomTicTacToePlayer("Random")
-        # },
+        {
+            "name": "TicTacToe - Greedy VS Random",
+            "player1": GreedyTicTacToePlayer("Greedy"),
+            "player2": RandomTicTacToePlayer("Random")
+        },
+        #  {
+        #      "name": "Minimax VS Random",
+        #      "player1": MinimaxTicTacToePlayer("Minimax"),
+        #      "player2": RandomTicTacToePlayer("Random")
+        #  },
         # {
         #     "name": "Minimax VS Greedy",
         #     "player1": MinimaxTicTacToePlayer("Minimax"),
@@ -146,8 +147,8 @@ def main():
         # }
     ]
 
-    #for sim in c4_simulations:
-    #    run_simulation(sim["name"], Connect4Simulator(sim["player1"], sim["player2"]), num_iterations)
+    # for sim in c4_simulations:
+    #     run_simulation(sim["name"], Connect4Simulator(sim["player1"], sim["player2"]), num_iterations)
 
     #for sim in poker_simulations:
     #    run_simulation(sim["name"], KuhnPokerSimulator(sim["player1"], sim["player2"]), num_iterations)
