@@ -49,15 +49,13 @@ class MinimaxTicTacToePlayer(TicTacToePlayer):
                 longest = seq
 
         # check each upward diagonal
-        for row in range(3, state.get_dimensions()):
-            for col in range(0, state.get_dimensions() - 3):
+        for row in range(2, state.get_dimensions()):
+            for col in range(0, state.get_dimensions() - 2):
                 seq1 = (1 if grid[row][col] == self.get_current_pos() else 0) + \
-                       (1 if grid[row - 1][col + 1] == self.get_current_pos() else 0) + \
-                       (1 if grid[row - 2][col + 2] == self.get_current_pos() else 0)
+                       (1 if grid[row - 1][col + 1] == self.get_current_pos() else 0)
 
                 seq2 = (1 if grid[row - 1][col + 1] == self.get_current_pos() else 0) + \
-                       (1 if grid[row - 2][col + 2] == self.get_current_pos() else 0) + \
-                       (1 if grid[row - 3][col + 3] == self.get_current_pos() else 0)
+                       (1 if grid[row - 2][col + 2] == self.get_current_pos() else 0)
 
                 if seq1 > longest:
                     longest = seq1
@@ -66,15 +64,13 @@ class MinimaxTicTacToePlayer(TicTacToePlayer):
                     longest = seq2
 
         # check each downward diagonal
-        for row in range(0, state.get_dimensions() - 3):
-            for col in range(0, state.get_dimensions() - 3):
+        for row in range(0, state.get_dimensions() - 2):
+            for col in range(0, state.get_dimensions() - 2):
                 seq1 = (1 if grid[row][col] == self.get_current_pos() else 0) + \
-                       (1 if grid[row + 1][col + 1] == self.get_current_pos() else 0) + \
-                       (1 if grid[row + 2][col + 2] == self.get_current_pos() else 0)
+                       (1 if grid[row + 1][col + 1] == self.get_current_pos() else 0)
 
                 seq2 = (1 if grid[row + 1][col + 1] == self.get_current_pos() else 0) + \
-                       (1 if grid[row + 2][col + 2] == self.get_current_pos() else 0) + \
-                       (1 if grid[row + 3][col + 3] == self.get_current_pos() else 0)
+                       (1 if grid[row + 2][col + 2] == self.get_current_pos() else 0)
 
                 if seq1 > longest:
                     longest = seq1
@@ -98,6 +94,10 @@ class MinimaxTicTacToePlayer(TicTacToePlayer):
                 TicTacToeResult.LOOSE: -40,
                 TicTacToeResult.DRAW: 0
             }[state.get_result(self.get_current_pos())]
+
+        # check if there are no more possible actions, indicating a draw
+        if not state.get_possible_actions():
+            return 0
 
         # if we reached the maximum depth, we will return the value of the heuristic
         if depth == 0:

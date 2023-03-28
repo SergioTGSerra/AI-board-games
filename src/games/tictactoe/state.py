@@ -185,8 +185,9 @@ class TicTacToeState(State):
         return list(filter(
             lambda action: self.validate_action(action),
             map(
-                lambda pos: TicTacToeAction(pos, pos),
-                range(0, self.get_dimensions()))
+                lambda pos: TicTacToeAction(pos[0], pos[1]),
+                [(i, j) for i in range(self.get_dimensions()) for j in range(self.get_dimensions())]
+            )
         ))
 
     def sim_play(self, action):
