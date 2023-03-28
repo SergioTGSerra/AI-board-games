@@ -95,10 +95,6 @@ class MinimaxTicTacToePlayer(TicTacToePlayer):
                 TicTacToeResult.DRAW: 0
             }[state.get_result(self.get_current_pos())]
 
-        # check if there are no more possible actions, indicating a draw
-        if not state.get_possible_actions():
-            return 0
-
         # if we reached the maximum depth, we will return the value of the heuristic
         if depth == 0:
             return self.__heuristic(state)
@@ -129,7 +125,6 @@ class MinimaxTicTacToePlayer(TicTacToePlayer):
                     break
                 beta = min(beta, value)
             return value
-
     def get_action(self, state: TicTacToeState):
         return self.minimax(state, 5)
 
