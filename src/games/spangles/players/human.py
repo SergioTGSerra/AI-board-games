@@ -13,7 +13,8 @@ class HumanSpanglesPlayer(SpanglesPlayer):
         while True:
             # noinspection PyBroadException
             try:
-                return SpanglesAction(int(input(f"Player {state.get_acting_player()}, choose a column: ")))
+                return SpanglesAction(int(input(f"Player {state.get_acting_player()}, choose a column: ")),
+                                      int(input(f"Player {state.get_acting_player()}, choose a row: ")))
             except Exception:
                 continue
 

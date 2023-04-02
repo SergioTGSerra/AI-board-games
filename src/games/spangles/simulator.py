@@ -5,7 +5,7 @@ from games.game_simulator import GameSimulator
 
 class SpanglesSimulator(GameSimulator):
 
-    def __init__(self, player1: SpanglesPlayer, player2: SpanglesPlayer, num_rows: int = 3, num_cols: int = 5):
+    def __init__(self, player1: SpanglesPlayer, player2: SpanglesPlayer, num_rows: int = 2, num_cols: int = 3):
         super(SpanglesSimulator, self).__init__([player1, player2])
         """
         the number of rows and cols from the Spangles grid
