@@ -121,7 +121,11 @@ class SpanglesState(State):
         if self.__grid[row][col] == SpanglesState.BLOCKED_CELL:
             return False
 
-        return True
+        # apenas pode jogar na celula se o valor for -1
+        if self.__grid[row][col] == SpanglesState.EMPTY_CELL:
+            return True
+
+        return False
 
     def update(self, action: SpanglesAction):
         col = action.get_col()
