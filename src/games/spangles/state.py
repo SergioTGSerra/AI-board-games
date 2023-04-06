@@ -6,8 +6,8 @@ from games.state import State
 
 
 class SpanglesState(State):
-    EMPTY_CELL = -1     #É possivel Jogar nesta cell
-    BLOCKED_CELL = -2   #Não é possivel Jogar nesta cell
+    EMPTY_CELL = -1  # É possivel Jogar nesta cell
+    BLOCKED_CELL = -2  # Não é possivel Jogar nesta cell
 
     def __init__(self, num_rows: int = 1, num_cols: int = 1):
         super().__init__()
@@ -23,11 +23,15 @@ class SpanglesState(State):
         self.__num_rows = num_rows
         self.__num_cols = num_cols
 
-
         """
         the grid
         """
-        self.__grid = [[SpanglesState.EMPTY_CELL for _i in range(self.__num_cols)] for _j in range(self.__num_rows)]
+        self.__grid = [[SpanglesState.BLOCKED_CELL for _i in range(self.__num_cols)] for _j in range(self.__num_rows)]
+
+        """
+        estados das peças da grid 1 - em pe, 0 - ao contrario
+        """
+        self.__statePiece = [[0 for _i in range(self.__num_cols)] for _j in range(self.__num_rows)]
 
         """
         counts the number of turns in the current game
@@ -43,13 +47,16 @@ class SpanglesState(State):
         adiciona a primeira peca para o primeiro jogador ao tabuleiro
         """
         self.__grid[0][1] = self.__acting_player
-        self.__acting_player = 1
+        self.__statePiece[0][1] = 1
+        self.__acting_player = 1 #Altera o player para o 1 depois uma vez que o player 0 a primeira jogada é automatica
+        self.__turns_count = 2
 
         """
-        define na matriz celulaa bloqueadas longe da peça inicial
+        define na matriz celulaa possiveis ao lado da peça inicial
         """
-        self.__grid[1][2] = SpanglesState.BLOCKED_CELL
-        self.__grid[1][0] = SpanglesState.BLOCKED_CELL
+        self.__grid[0][0] = SpanglesState.EMPTY_CELL
+        self.__grid[0][2] = SpanglesState.EMPTY_CELL
+        self.__grid[1][1] = SpanglesState.EMPTY_CELL
 
         """
         determine if a winner was found already 
@@ -57,40 +64,20 @@ class SpanglesState(State):
         self.__has_winner = False
 
     def __check_winner(self, player):
-        # check for 4 across
-        for row in range(0, self.__num_rows):
-            for col in range(0, self.__num_cols - 3):
+        # check for 3 down
+        for row in range(0, self.__num_rows - 2):
+            for col in range(0, self.__num_cols - 2):
                 if self.__grid[row][col] == player and \
-                        self.__grid[row][col + 1] == player and \
                         self.__grid[row][col + 2] == player and \
-                        self.__grid[row][col + 3] == player:
+                        self.__grid[row + 1][col + 1] == player:
                     return True
 
-        # check for 4 up and down
-        for row in range(0, self.__num_rows - 3):
-            for col in range(0, self.__num_cols):
+        # check for 3 up
+        for row in range(2, self.__num_rows):
+            for col in range(0, self.__num_cols - 2):
                 if self.__grid[row][col] == player and \
-                        self.__grid[row + 1][col] == player and \
-                        self.__grid[row + 2][col] == player and \
-                        self.__grid[row + 3][col] == player:
-                    return True
-
-        # check upward diagonal
-        for row in range(3, self.__num_rows):
-            for col in range(0, self.__num_cols - 3):
-                if self.__grid[row][col] == player and \
-                        self.__grid[row - 1][col + 1] == player and \
-                        self.__grid[row - 2][col + 2] == player and \
-                        self.__grid[row - 3][col + 3] == player:
-                    return True
-
-        # check downward diagonal
-        for row in range(0, self.__num_rows - 3):
-            for col in range(0, self.__num_cols - 3):
-                if self.__grid[row][col] == player and \
-                        self.__grid[row + 1][col + 1] == player and \
-                        self.__grid[row + 2][col + 2] == player and \
-                        self.__grid[row + 3][col + 3] == player:
+                        self.__grid[row][col + 2] == player and \
+                        self.__grid[row - 1][col + 1] == player:
                     return True
 
         return False
@@ -131,29 +118,88 @@ class SpanglesState(State):
         col = action.get_col()
         row = action.get_row()
 
+        # Encontra a peça mais próxima com o valor 0 ou 1 na grid antes de defenir a nova jogada
+        nearest = None
+        for i in range(max(0, row - 1), min(self.__num_rows, row + 2)):
+            for j in range(max(0, col - 1), min(self.__num_cols, col + 2)):
+                if self.__grid[i][j] in [0, 1]:
+                    if nearest is None or abs(i - row) + abs(j - col) < abs(nearest[0] - row) + abs(nearest[1] - col):
+                        nearest = (i, j)
+
+        # Faz a jogada
         self.__grid[row][col] = self.__acting_player
 
+        if nearest[0] < row:
+            # peça colocada a baixo da mais proxima
+            if self.__statePiece[nearest[0]][nearest[1]] == 1:
+                self.__statePiece[row][col] = 0
+            elif self.__statePiece[nearest[0]][nearest[1]] == 0:
+                self.__statePiece[row][col] = 1
+        elif nearest[0] > row:
+            # peça colocada a acima da mais proxima
+            if self.__statePiece[nearest[0]][nearest[1]] == 1:
+                self.__statePiece[row][col] = 0
+            elif self.__statePiece[nearest[0]][nearest[1]] == 0:
+                self.__statePiece[row][col] = 1
+        elif nearest[1] < col:
+            # peça colocada a direita da mais proxima
+            if self.__statePiece[nearest[0]][nearest[1]] == 1:
+                self.__statePiece[row][col] = 0
+            elif self.__statePiece[nearest[0]][nearest[1]] == 0:
+                self.__statePiece[row][col] = 1
+        elif nearest[1] > col:
+            # peça colocada a direita da mais proxima
+            if self.__statePiece[nearest[0]][nearest[1]] == 1:
+                self.__statePiece[row][col] = 0
+            elif self.__statePiece[nearest[0]][nearest[1]] == 0:
+                self.__statePiece[row][col] = 1
+
         # Verifica se está a jogar na ultima linha da matriz se sim vai adicionar mais uma linha abaixo
-        if len(self.__grid) - 1 == row:
-            self.__grid.append([SpanglesState.EMPTY_CELL] * self.__num_cols)
+        if len(self.__grid) - 1 == row and len(self.__statePiece) - 1 == row:
+            self.__grid.append([SpanglesState.BLOCKED_CELL] * self.__num_cols)
+            self.__statePiece.append([0] * self.__num_cols)
             self.__num_rows += 1
 
         # Verifica se está a jogar na primeira linha da matriz se sim vai adicionar mais uma linha acima
-        if row  == 0:
-            self.__grid.insert(0, [SpanglesState.EMPTY_CELL] * self.__num_cols)
+        if row == 0:
+            self.__grid.insert(0, [SpanglesState.BLOCKED_CELL] * self.__num_cols)
+            self.__statePiece.insert(0, [0] * self.__num_cols)
             self.__num_rows += 1
 
         # Verifica se está a jogar na ultima coluna da matriz se sim vai adicionar mais uma coluna a direira
-        if len(self.__grid[0]) - 1 == col:
+        if len(self.__grid[0]) - 1 == col and len(self.__statePiece[0]) - 1 == col:
             for i in range(len(self.__grid)):
-                self.__grid[i].append(SpanglesState.EMPTY_CELL)
+                self.__grid[i].append(SpanglesState.BLOCKED_CELL)
+            for i in range(len(self.__statePiece)):
+                self.__statePiece[i].append(0)
             self.__num_cols += 1
 
-        # Verifica se está a jogar na primeira coluna da matriz se sim vai adicionar mais uma coluna a esuqerda
+        # Verifica se está a jogar na primeira coluna da matriz se sim vai adicionar mais uma coluna a esquerda
         if col == 0:
             for i in range(len(self.__grid)):
-                self.__grid[i].insert(0, SpanglesState.EMPTY_CELL)
+                self.__grid[i].insert(0, SpanglesState.BLOCKED_CELL)
+            for i in range(len(self.__statePiece)):
+                self.__statePiece[i].insert(0, 0)
             self.__num_cols += 1
+
+        # Percorre a grade para definir os valores das casa impossivceis abaixo e acima
+        for row in range(self.__num_rows):
+            for col in range(self.__num_cols):
+                if self.__grid[row][col] == 0 or self.__grid[row][col] == 1:
+                    #Adiciona casas impossiveis para cima e para baixo
+                    if self.__statePiece[row][col] == 1 and self.__grid[row + 1][col] == -2:
+                        self.__grid[row + 1][col] = -1
+                    elif self.__statePiece[row][col] == 0 and self.__grid[row - 1][col] == -2:
+                        self.__grid[row - 1][col] = -1
+                    # Adiciona casas impossiveis para direita e para esquerda
+                    if self.__statePiece[row][col] == 1 and self.__grid[row][col + 1] == -2:
+                        self.__grid[row][col + 1] = -1
+                    if self.__statePiece[row][col] == 1 and self.__grid[row][col - 1] == -2:
+                        self.__grid[row][col - 1] = -1
+                    if self.__statePiece[row][col] == 0 and self.__grid[row][col - 1] == -2:
+                        self.__grid[row][col - 1] = -1
+                    if self.__statePiece[row][col] == 0 and self.__grid[row][col + 1] == -2:
+                        self.__grid[row][col + 1] = -1
 
         # determine if there is a winner
         self.__has_winner = self.__check_winner(self.__acting_player)
@@ -164,17 +210,32 @@ class SpanglesState(State):
         self.__turns_count += 1
 
     def __display_cell(self, row, col):
-        print({
-                  0: '0 ',
-                  1: '1 ',
-                  SpanglesState.EMPTY_CELL: '-1',
-                  SpanglesState.BLOCKED_CELL: '-2',
-              }[self.__grid[row][col]], end="")
+        if self.__grid[row][col] == SpanglesState.EMPTY_CELL:
+            print(' ', end="")
+        elif self.__grid[row][col] == SpanglesState.BLOCKED_CELL:
+            print('x', end="")
+        else:
+            if self.__statePiece[row][col] == 1 and self.__grid[row][col] == 1:
+                print('\033[1;34;48m▲\033[1;m', end="")
+            elif self.__statePiece[row][col] == 0 and self.__grid[row][col] == 1:
+                print('\033[1;34;48m▼\033[1;m', end="")
+            elif self.__statePiece[row][col] == 1 and self.__grid[row][col] == 0:
+                print('\033[1;33;48m▲\033[1;m', end="")
+            elif self.__statePiece[row][col] == 0 and self.__grid[row][col] == 0:
+                print('\033[1;33;48m▼\033[1;m', end="")
+
+    def __display_numbers(self):
+        print('  ', end="")
+        for col in range(0, self.__num_cols):
+            if col < 10:
+                print(' ', end="")
+            print(col, end="")
+        print("")
 
     def display(self):
-
+        self.__display_numbers()
         for row in range(0, self.__num_rows):
-            print('|', end="")
+            print(row, '|', end="")
             for col in range(0, self.__num_cols):
                 self.__display_cell(row, col)
                 print('|', end="")
@@ -198,6 +259,7 @@ class SpanglesState(State):
         for row in range(0, self.__num_rows):
             for col in range(0, self.__num_cols):
                 cloned_state.__grid[row][col] = self.__grid[row][col]
+                cloned_state.__statePiece[row][col] = self.__statePiece[row][col]
         return cloned_state
 
     def get_result(self, pos) -> Optional[SpanglesResult]:
