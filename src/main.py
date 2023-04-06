@@ -1,5 +1,6 @@
 from games.game_simulator import GameSimulator
 from games.spangles.players.human import HumanSpanglesPlayer
+from games.spangles.players.random import RandomSpanglesPlayer
 from games.spangles.simulator import SpanglesSimulator
 
 
@@ -133,16 +134,16 @@ def main():
 
     spangles_simulations = [
         # uncomment to play as human
-        {
-           "name": "Spangles - Human VS Human",
-           "player1": HumanSpanglesPlayer("Human"),
-           "player2": HumanSpanglesPlayer("Human")
-        },
         # {
-        #     "name": "TicTacToe - Random VS Random",
-        #     "player1": RandomTicTacToePlayer("Random 1"),
-        #     "player2": RandomTicTacToePlayer("Random 2")
+        #    "name": "Spangles - Human VS Human",
+        #    "player1": HumanSpanglesPlayer("Human 1"),
+        #    "player2": HumanSpanglesPlayer("Human 2")
         # },
+        {
+            "name": "Spangles - Random VS Random",
+            "player1": HumanSpanglesPlayer("Human"),
+            "player2": RandomSpanglesPlayer("Random")
+        },
         # {
         #     "name": "TicTacToe - Greedy VS Random",
         #     "player1": GreedyTicTacToePlayer("Greedy"),
