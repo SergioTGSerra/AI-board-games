@@ -49,7 +49,6 @@ class SpanglesState(State):
         self.__grid[0][1] = self.__acting_player
         self.__statePiece[0][1] = 1
         self.__acting_player = 1 #Altera o player para o 1 depois uma vez que o player 0 a primeira jogada é automatica
-        self.__turns_count = 2
 
         """
         define na matriz celulaa possiveis ao lado da peça inicial
@@ -67,17 +66,17 @@ class SpanglesState(State):
         # check for 3 down
         for row in range(0, self.__num_rows - 2):
             for col in range(0, self.__num_cols - 2):
-                if self.__grid[row][col] == player and \
-                        self.__grid[row][col + 2] == player and \
-                        self.__grid[row + 1][col + 1] == player:
+                if self.__grid[row][col] == player and self.__statePiece[row][col] == 0 and\
+                        self.__grid[row][col + 2] == player and self.__statePiece[row][col] == 0 and \
+                        self.__grid[row + 1][col + 1] == player and self.__statePiece[row][col] == 0:
                     return True
 
         # check for 3 up
         for row in range(2, self.__num_rows):
             for col in range(0, self.__num_cols - 2):
-                if self.__grid[row][col] == player and \
-                        self.__grid[row][col + 2] == player and \
-                        self.__grid[row - 1][col + 1] == player:
+                if self.__grid[row][col] == player and self.__statePiece[row][col] == 1 and\
+                        self.__grid[row][col + 2] == player and self.__statePiece[row][col] == 1 and\
+                        self.__grid[row - 1][col + 1] == player and self.__statePiece[row][col] == 1:
                     return True
 
         return False
@@ -243,7 +242,7 @@ class SpanglesState(State):
         print("")
 
     def __is_full(self):
-        return self.__turns_count > (self.__num_cols * self.__num_rows)
+        return self.__turns_count >= 50
 
     def is_finished(self) -> bool:
         return self.__has_winner or self.__is_full()
@@ -265,7 +264,7 @@ class SpanglesState(State):
     def get_result(self, pos) -> Optional[SpanglesResult]:
         if self.__has_winner:
             return SpanglesResult.LOOSE if pos == self.__acting_player else SpanglesResult.WIN
-        if self.__turns_count == 50:
+        if self.__turns_count >= 50:
             return SpanglesResult.DRAW
         return None
 
