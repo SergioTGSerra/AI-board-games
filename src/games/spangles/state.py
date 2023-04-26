@@ -194,6 +194,7 @@ class SpanglesState(State):
                     if self.__statePiece[row][col] == 0 and self.__grid[row][col + 1] == -2:
                         self.__grid[row][col + 1] = -1
 
+
         # determine if there is a winner
         self.__has_winner = self.__check_winner(self.__acting_player)
 
@@ -283,3 +284,12 @@ class SpanglesState(State):
         new_state = self.clone()
         new_state.play(action)
         return new_state
+
+    def get_piece_state(self, row: int, col: int) -> int:
+        """
+        Get the state of the piece at the given row and column
+        :param row: the row of the piece
+        :param col: the column of the piece
+        :return: 1 if the piece is flipped, 0 otherwise
+        """
+        return self.__statePiece[row][col]
