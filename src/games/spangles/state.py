@@ -44,17 +44,9 @@ class SpanglesState(State):
         self.__acting_player = 0
 
         """
-        adiciona a primeira peca para o primeiro jogador ao tabuleiro
-        """
-        self.__grid[0][1] = self.__acting_player
-        self.__statePiece[0][1] = 1
-        self.__acting_player = 1 #Altera o player para o 1 depois uma vez que o player 0 a primeira jogada é automatica
-
-        """
         define na matriz celulaa possiveis ao lado da peça inicial
         """
-        self.__grid[0][0] = SpanglesState.EMPTY_CELL
-        self.__grid[0][2] = SpanglesState.EMPTY_CELL
+        self.__grid[0][1] = SpanglesState.EMPTY_CELL
         self.__grid[1][1] = SpanglesState.EMPTY_CELL
 
         """
@@ -88,6 +80,8 @@ class SpanglesState(State):
         return 2
 
     def validate_action(self, action: SpanglesAction) -> bool:
+        if action is None:
+            return False
         col = action.get_col()
         row = action.get_row()
 
@@ -128,25 +122,25 @@ class SpanglesState(State):
         # Faz a jogada
         self.__grid[row][col] = self.__acting_player
 
-        if nearest[0] < row:
+        if nearest and nearest[0] < row:
             # peça colocada a baixo da mais proxima
             if self.__statePiece[nearest[0]][nearest[1]] == 1:
                 self.__statePiece[row][col] = 0
             elif self.__statePiece[nearest[0]][nearest[1]] == 0:
                 self.__statePiece[row][col] = 1
-        elif nearest[0] > row:
+        elif nearest and nearest[0] > row:
             # peça colocada a acima da mais proxima
             if self.__statePiece[nearest[0]][nearest[1]] == 1:
                 self.__statePiece[row][col] = 0
             elif self.__statePiece[nearest[0]][nearest[1]] == 0:
                 self.__statePiece[row][col] = 1
-        elif nearest[1] < col:
+        elif nearest and nearest[1] < col:
             # peça colocada a direita da mais proxima
             if self.__statePiece[nearest[0]][nearest[1]] == 1:
                 self.__statePiece[row][col] = 0
             elif self.__statePiece[nearest[0]][nearest[1]] == 0:
                 self.__statePiece[row][col] = 1
-        elif nearest[1] > col:
+        elif nearest and nearest[1] > col:
             # peça colocada a direita da mais proxima
             if self.__statePiece[nearest[0]][nearest[1]] == 1:
                 self.__statePiece[row][col] = 0
