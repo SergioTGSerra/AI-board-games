@@ -16,7 +16,7 @@ class MinimaxSpanglesPlayer(SpanglesPlayer):
     It's not a great heuristic as it doesn't take into consideration a defensive approach
     '''
 
-    def heuristic(state: SpanglesState):
+    def __heuristic(state: SpanglesState):
         board = state.get_grid()
         current_player = state.get_acting_player()
         num_cols = state.get_num_cols()
