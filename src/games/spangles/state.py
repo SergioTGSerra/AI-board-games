@@ -272,24 +272,19 @@ class SpanglesState(State):
     def before_results(self):
         pass
 
-    def get_possible_actions(self):
-        return list(filter(
-            lambda action: self.validate_action(action),
-            map(
-                lambda pos: SpanglesAction(pos, pos),
-                range(0, self.get_num_cols()))
-        ))
+    def get_possible_actions(self) -> set:
+        actions = set()
+        num_rows, num_cols = self.get_num_rows(), self.get_num_cols()
+
+        for col in range(num_cols):
+            for row in range(num_rows):
+                action = SpanglesAction(col, row)
+                if self.validate_action(action):
+                    actions.add(action)
+
+        return actions
 
     def sim_play(self, action):
         new_state = self.clone()
         new_state.play(action)
         return new_state
-
-    def get_piece_state(self, row: int, col: int) -> int:
-        """
-        Get the state of the piece at the given row and column
-        :param row: the row of the piece
-        :param col: the column of the piece
-        :return: 1 if the piece is flipped, 0 otherwise
-        """
-        return self.__statePiece[row][col]

@@ -16,56 +16,44 @@ class MinimaxSpanglesPlayer(SpanglesPlayer):
     It's not a great heuristic as it doesn't take into consideration a defensive approach
     '''
 
-    def __heuristic(state: SpanglesState):
-        board = state.get_grid()
-        current_player = state.get_acting_player()
-        num_cols = state.get_num_cols()
-        num_rows = state.get_num_rows()
-        score = 0
+    def __heuristic(self, state: SpanglesState):
+        grid = state.get_grid()
+        longest = 0
 
-        # check for 3 in a row
-        for row in range(0, num_rows - 2):
-            for col in range(0, num_cols - 2):
-                if board[row][col] == current_player and state.get_piece_state(row, col) == 0 and \
-                        board[row][col + 2] == current_player and state.get_piece_state(row, col + 2) == 0 and \
-                        board[row + 1][col + 1] == current_player and state.get_piece_state(row + 1, col + 1) == 0:
-                    score += 1
-
-        # check for 3 up
-        for row in range(2, num_rows):
-            for col in range(0, num_cols - 2):
-                if board[row][col] == current_player and state.get_piece_state(row, col) == 1 and \
-                        board[row][col + 2] == current_player and state.get_piece_state(row, col + 2) == 1 and \
-                        board[row - 1][col + 1] == current_player and state.get_piece_state(row - 1, col + 1) == 1:
-                    score += 1
-
-        # check for 4 in a row
-        for row in range(0, num_rows):
-            count = 0
-            for col in range(0, num_cols):
-                if board[row][col] == current_player and state.get_piece_state(row, col) == 0:
-                    count += 1
+        # check each line
+        for row in range(0, state.get_num_rows()):
+            seq = 0
+            for col in range(0, state.get_num_cols()):
+                if grid[row][col] == self.get_current_pos():
+                    seq += 1
                 else:
-                    if count == 4:
-                        score += 1
-                    count = 0
-            if count == 4:
-                score += 1
+                    if seq > longest:
+                        longest = seq
+                    seq = 0
 
-        # check for 4 in a column
-        for col in range(0, num_cols):
-            count = 0
-            for row in range(0, num_rows):
-                if board[row][col] == current_player and state.get_piece_state(row, col) == 0:
-                    count += 1
+            if seq > longest:
+                longest = seq
+
+        # check each column
+        for col in range(0, state.get_num_cols()):
+            seq = 0
+            for row in range(0, state.get_num_rows()):
+                if grid[row][col] == self.get_current_pos():
+                    seq += 1
                 else:
-                    if count == 4:
-                        score += 1
-                    count = 0
-            if count == 4:
-                score += 1
+                    if seq > longest:
+                        longest = seq
+                    seq = 0
 
-        return score
+            if seq > longest:
+                longest = seq
+
+        return longest
+
+    """Implementation of minimax search (recursive, with alpha/beta pruning) :param state: the state for which the 
+    search should be made :param depth: maximum depth of the search :param alpha: to optimize the search :param beta: 
+    to optimize the search :param is_initial_node: if true, the function will return the action with max ev, 
+    otherwise it return the max ev (ev = expected value) """
 
     """Implementation of minimax search (recursive, with alpha/beta pruning) :param state: the state for which the 
     search should be made :param depth: maximum depth of the search :param alpha: to optimize the search :param beta: 
@@ -88,7 +76,6 @@ class MinimaxSpanglesPlayer(SpanglesPlayer):
 
         # if we are the acting player
         if self.get_current_pos() == state.get_acting_player():
-            print(str(self.get_current_pos()) + " | " + str(state.get_acting_player()))
             # very small integer
             value = -math.inf
             selected_action = None

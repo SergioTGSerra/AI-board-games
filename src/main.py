@@ -1,5 +1,7 @@
 from games.game_simulator import GameSimulator
+from games.spangles.players.greedy import GreedySpanglesPlayer
 from games.spangles.players.human import HumanSpanglesPlayer
+from games.spangles.players.minimax import MinimaxSpanglesPlayer
 from games.spangles.players.random import RandomSpanglesPlayer
 from games.spangles.simulator import SpanglesSimulator
 
@@ -18,7 +20,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 4
+    num_iterations = 200
 
     # c4_simulations = [
     #     uncomment to play as human
@@ -141,8 +143,8 @@ def main():
         # },
         {
             "name": "Spangles - Random VS Random",
-            "player1": HumanSpanglesPlayer("Human"),
-            "player2": RandomSpanglesPlayer("Random")
+            "player1": RandomSpanglesPlayer("Human"),
+            "player2": MinimaxSpanglesPlayer("Random")
         },
         # {
         #     "name": "TicTacToe - Greedy VS Random",
