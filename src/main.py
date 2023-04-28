@@ -20,7 +20,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 200
+    num_iterations = 1000
 
     # c4_simulations = [
     #     uncomment to play as human
@@ -138,29 +138,44 @@ def main():
         # uncomment to play as human
         # {
         #    "name": "Spangles - Human VS Human",
-        #    "player1": HumanSpanglesPlayer("Human 1"),
-        #    "player2": HumanSpanglesPlayer("Human 2")
+        #    "player1": HumanSpanglesPlayer("Human 2"),
+        #    "player2": HumanSpanglesPlayer("Human 1")
         # },
         {
-            "name": "Spangles - Random VS Random",
-            "player1": RandomSpanglesPlayer("Human"),
-            "player2": MinimaxSpanglesPlayer("Random")
+           "name": "Spangles - Random VS Random",
+           "player1": RandomSpanglesPlayer("Random 2"),
+           "player2": RandomSpanglesPlayer("Random 1")
+        },
+        {
+           "name": "Spangles - Greedy VS Greedy",
+           "player1": GreedySpanglesPlayer("Greedy 2"),
+           "player2": GreedySpanglesPlayer("Greedy 1")
         },
         # {
-        #     "name": "TicTacToe - Greedy VS Random",
-        #     "player1": GreedyTicTacToePlayer("Greedy"),
-        #     "player2": RandomTicTacToePlayer("Random")
+        #    "name": "Spangles - Minimax VS Minimax",
+        #    "player1": MinimaxSpanglesPlayer("Minimax 2"),
+        #    "player2": MinimaxSpanglesPlayer("Minimax 1")
         # },
-        #  {
-        #      "name": "TicTacToe - Minimax VS Random",
-        #      "player1": MinimaxTicTacToePlayer("Minimax"),
-        #      "player2": RandomTicTacToePlayer("Random")
-        #  },
-        # {
-        #     "name": "TicTacToe - Minimax VS Greedy",
-        #     "player1": MinimaxTicTacToePlayer("Minimax"),
-        #     "player2": GreedyTicTacToePlayer("Greedy")
-        # }
+        {
+            "name": "Spangles - Greedy VS Random",
+            "player1": RandomSpanglesPlayer("Random"),
+            "player2": GreedySpanglesPlayer("Greedy")
+        },
+        {
+           "name": "Spangles - Greedy VS Greedy",
+           "player1": GreedySpanglesPlayer("Greedy 2"),
+           "player2": GreedySpanglesPlayer("Greedy 1")
+        },
+        {
+            "name": "Spangles - Greedy VS Minimax",
+            "player1": GreedySpanglesPlayer("Greedy"),
+            "player2": MinimaxSpanglesPlayer("Minimax")
+        },
+        {
+            "name": "Spangles - Minimax VS Random",
+            "player1": RandomSpanglesPlayer("Random"),
+            "player2": MinimaxSpanglesPlayer("Minimax")
+        }
     ]
 
     # for sim in c4_simulations:
