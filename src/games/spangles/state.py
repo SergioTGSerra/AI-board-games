@@ -9,13 +9,13 @@ class SpanglesState(State):
     EMPTY_CELL = -1  # É possivel Jogar nesta cell
     BLOCKED_CELL = -2  # Não é possivel Jogar nesta cell
 
-    def __init__(self, num_rows: int = 1, num_cols: int = 1):
+    def __init__(self, num_rows: int = 2, num_cols: int = 3):
         super().__init__()
 
-        if num_rows < 1:
-            raise Exception("the number of rows must be 1 or over")
-        if num_cols < 1:
-            raise Exception("the number of cols must be 1 or over")
+        if num_rows < 2:
+            raise Exception("the number of rows must be 2 or over")
+        if num_cols < 3:
+            raise Exception("the number of cols must be 3 or over")
 
         """
         the dimensions of the board (initial)
